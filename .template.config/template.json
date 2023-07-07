@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Daniel Garcia",
+  "classifications": [ "Web" ],
+  "identity": "Windows.Service.Template",
+  "name": "Windows Service Template",
+  "description": "Windows service template for creating a windows service with a Wix installer",
+  "shortName": "windowsservicetemplate",
+  "sourceName": "Windows.Service.Template",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "preferNameDirectory": true
+}
