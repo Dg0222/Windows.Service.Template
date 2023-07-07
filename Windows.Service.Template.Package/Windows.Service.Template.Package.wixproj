@@ -1,0 +1,24 @@
+﻿<Project Sdk="WixToolset.Sdk/4.0.0">
+	<PropertyGroup>
+		<DefineConstants>HarvestPath= ..\Windows.Service.Template\bin\Release\net7.0\publish\win-x64</DefineConstants>
+	</PropertyGroup>
+	<ItemGroup>
+    <PackageReference Include="WixToolset.Heat" Version="4.0.1" />
+    <Compile Include="HeatGeneratedFileList.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Windows.Service.Template\Windows.Service.Template.csproj" />
+  </ItemGroup>
+	<!--<Target Name="HarvestFiles" AfterTargets="BeforeBuild">
+		<HeatDirectory Directory="..\Windows.Service.Template\bin\Release\net7.0\publish\win-x64"
+		               PreprocessorVariable="var.HarvestPath"
+		               OutputFile="HeatGeneratedFileList.wxs"
+					   ComponentGroupName="WindowsServiceFiles"
+		               DirectoryRefId="INSTALLFOLDER"
+		               AutogenerateGuids="true"
+		               ToolPath="$(WixToolPath)"
+		               SuppressFragments="true"
+		               SuppressRegistry="true"
+		               SuppressRootDirectory="true" />
+	</Target>-->
+</Project>
