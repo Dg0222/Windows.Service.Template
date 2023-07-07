@@ -1,24 +1,43 @@
 ﻿<Project Sdk="WixToolset.Sdk/4.0.0">
-	<PropertyGroup>
-		<DefineConstants>HarvestPath= ..\Windows.Service.Template\bin\Release\net7.0\publish\win-x64</DefineConstants>
-	</PropertyGroup>
-	<ItemGroup>
-    <PackageReference Include="WixToolset.Heat" Version="4.0.1" />
-    <Compile Include="HeatGeneratedFileList.wxs" />
+  <PropertyGroup>
+    <Platform>x64</Platform>
+    <HarvestPath>..\Windows.Service.Template\bin\Release\net7.0\win-x64\publish</HarvestPath>
+    <DefineConstants>HarvestPath=$(HarvestPath)</DefineConstants>
+    <EnableProjectHarvesting>true</EnableProjectHarvesting>
+    <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="ExcludeEXE.xslt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Windows.Service.Template\Windows.Service.Template.csproj" />
+	  <PackageReference Include="WixToolset.Heat" Version="4.0.1" />
   </ItemGroup>
-	<!--<Target Name="HarvestFiles" AfterTargets="BeforeBuild">
-		<HeatDirectory Directory="..\Windows.Service.Template\bin\Release\net7.0\publish\win-x64"
-		               PreprocessorVariable="var.HarvestPath"
-		               OutputFile="HeatGeneratedFileList.wxs"
-					   ComponentGroupName="WindowsServiceFiles"
-		               DirectoryRefId="INSTALLFOLDER"
-		               AutogenerateGuids="true"
-		               ToolPath="$(WixToolPath)"
-		               SuppressFragments="true"
-		               SuppressRegistry="true"
-		               SuppressRootDirectory="true" />
-	</Target>-->
+  <ItemGroup>
+	  <ProjectReference Include="..\Windows.Service.Template\Windows.Service.Template.csproj" >
+		  <Runtime>win-x64</Runtime>
+		  <TargetFrameworkIdentifier>net7.0</TargetFrameworkIdentifier>
+		  <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+	  </ProjectReference>
+  </ItemGroup>
+  <Target Name="HarvestFiles" AfterTargets="BeforeBuild">
+	  <Exec WorkingDirectory="%(ProjectReference.RootDir)%(ProjectReference.Directory)" Command="dotnet publish -c Release -f %(ProjectReference.TargetFrameworkIdentifier) -r %(ProjectReference.Runtime)" />
+	  <ItemGroup>
+		  <LinkerBindInputPaths Include="%(ProjectReference.RootDir)%(ProjectReference.Directory)bin\Release\%(ProjectReference.TargetFrameworkIdentifier)\%(ProjectReference.Runtime)\publish" />
+	  </ItemGroup>
+	  <HeatDirectory 
+	    Directory="%(ProjectReference.RootDir)%(ProjectReference.Directory)bin\Release\%(ProjectReference.TargetFrameworkIdentifier)\%(ProjectReference.Runtime)\publish" 
+	    PreprocessorVariable="var.HarvestPath" 
+	    OutputFile="obj\$(Configuration)\%(ProjectReference.Name)\HeatGeneratedFileList.wxs" 
+	    ComponentGroupName="WindowsServiceFiles" 
+	    DirectoryRefId="INSTALLFOLDER" 
+	    AutogenerateGuids="true" 
+	    ToolPath="$(WixToolPath)" 
+	    SuppressFragments="true" 
+	    SuppressRegistry="true" 
+	    SuppressRootDirectory="true"
+	    Transforms="ExcludeEXE.xslt"/>
+	  <ItemGroup>
+		  <Compile Include="obj\$(Configuration)\%(ProjectReference.Name)\HeatGeneratedFileList.wxs"  />
+	  </ItemGroup>
+  </Target>
 </Project>

@@ -33,19 +33,13 @@
              the App.WindowsService directory via INSTALLFOLDER -->
 		<DirectoryRef Id="INSTALLFOLDER">
 
-			<Component Id="cmp8UUaYEqazDlsXijrnr5jdSNyMTw" Guid="*">
-				<File Id="filHxb8pphGibvS58LtDjEfGDzpMAc" KeyPath="yes" Source="$(var.Windows.Service.Template.TargetDir)publish\win-x64\appsettings.Development.json" />
-			</Component>
-			<Component Id="cmpOGkoJkApsx09TmwlmeSYNXu8O2k" Guid="*">
-				<File Id="filhOmU2zCUvc3hRee0kCgcGDUVj8c" KeyPath="yes" Source="$(var.Windows.Service.Template.TargetDir)publish\win-x64\appsettings.json" />
-			</Component>
 			<!-- Create a single component which is the App.WindowsService.exe file -->
 			<Component Id="ServiceExecutable" Bitness="always64">
 
 				<!-- Copies the App.WindowsService.exe file using the
                      project reference preprocessor variables -->
 				<File Id="Windows.Service.Template.exe"
-                      Source="$(var.Windows.Service.Template.TargetDir)publish\win-x64\Windows.Service.Template.exe"
+                      Source="$(var.Windows.Service.Template.TargetDir)win-x64\publish\Windows.Service.Template.exe"
                       KeyPath="true" />
 
 				<!-- Remove all files from the INSTALLFOLDER on uninstall -->
@@ -69,14 +63,13 @@
                                 Wait="true" />
 			</Component>
 		</DirectoryRef>
-		<ComponentGroup Id="WindowsServiceFiles">
-			<ComponentRef Id="cmp8UUaYEqazDlsXijrnr5jdSNyMTw" />
-			<ComponentRef Id="cmpOGkoJkApsx09TmwlmeSYNXu8O2k" />
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+			<ComponentGroupRef Id="WindowsServiceFiles" />
 		</ComponentGroup>
 		<!-- Tell WiX to install the files -->
 		<Feature Id="Service" Title="Windows.Service.Template Setup" Level="1">
 			<ComponentRef Id="ServiceExecutable" />
-			<ComponentGroupRef Id="WindowsServiceFiles" />
+			<ComponentGroupRef Id="ProductComponents" />
 		</Feature>
 
 	</Package>
